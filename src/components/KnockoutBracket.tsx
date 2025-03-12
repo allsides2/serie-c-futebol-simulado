@@ -1,4 +1,3 @@
-
 import { useFootball } from '@/context/FootballContext';
 
 const KnockoutBracket = () => {
@@ -15,12 +14,33 @@ const KnockoutBracket = () => {
   // Função para renderizar time na chave
   const renderTeam = (teamId: number | null, isWinner: boolean = false) => {
     const team = getTeamById(teamId);
+    const isFigueirense = teamId === 9;
     
     return (
-      <div className={`p-2 ${isWinner ? 'font-bold bg-brasil-green text-white' : 'bg-gray-100'}`}>
-        {team ? team.name : '—'}
+      <div className={`p-2 ${
+        isFigueirense 
+          ? 'bg-figueira-black text-figueira-white font-bold border-l-4 border-figueira-white' 
+          : isWinner 
+            ? 'font-bold bg-brasil-green text-white' 
+            : 'bg-gray-100'
+      }`}>
+        {team ? (
+          <div className="flex items-center justify-between">
+            <span>{team.name}</span>
+            {isFigueirense && (
+              <span className="ml-1 px-1 py-0.5 text-xs bg-figueira-white text-figueira-black rounded-sm">
+                FIG
+              </span>
+            )}
+          </div>
+        ) : '—'}
       </div>
     );
+  };
+  
+  // Função para verificar se um confronto tem o Figueirense
+  const hasFigueirense = (pair: any) => {
+    return pair.homeTeamId === 9 || pair.awayTeamId === 9;
   };
   
   // Função para renderizar um confronto de mata-mata
@@ -35,8 +55,12 @@ const KnockoutBracket = () => {
       
     const aggregateResult = `(${pair.homeAggregateGoals} × ${pair.awayAggregateGoals})`;
     
+    const highlightPair = hasFigueirense(pair);
+    
     return (
-      <div className="border rounded-md overflow-hidden mb-2">
+      <div className={`border rounded-md overflow-hidden mb-2 ${
+        highlightPair ? 'border-2 border-figueira-black ring-1 ring-figueira-white' : ''
+      }`}>
         <div className="flex justify-between border-b">
           {renderTeam(pair.homeTeamId, pair.winnerId === pair.homeTeamId)}
           <div className="text-xs p-2 flex items-center">
@@ -49,7 +73,9 @@ const KnockoutBracket = () => {
             <span>{secondLegResult}</span>
           </div>
         </div>
-        <div className="text-xs bg-gray-200 p-1 text-center">
+        <div className={`text-xs p-1 text-center ${
+          highlightPair ? 'bg-figueira-black text-figueira-white' : 'bg-gray-200'
+        }`}>
           {pair.firstLeg.played && pair.secondLeg.played ? aggregateResult : 'Agregado: ? × ?'}
         </div>
       </div>
@@ -63,10 +89,21 @@ const KnockoutBracket = () => {
     const champion = getTeamById(final.winnerId);
     if (!champion) return null;
     
+    const isFigueirenseChampion = final.winnerId === 9;
+    
     return (
       <div className="flex flex-col items-center">
-        <div className="w-40 h-12 bg-brasil-yellow rounded-md flex items-center justify-center text-black font-bold">
+        <div className={`w-40 h-12 rounded-md flex items-center justify-center font-bold ${
+          isFigueirenseChampion 
+            ? 'bg-figueira-black text-figueira-white border-2 border-figueira-white' 
+            : 'bg-brasil-yellow text-black'
+        }`}>
           {champion.name}
+          {isFigueirenseChampion && (
+            <span className="ml-2 text-xs bg-figueira-white text-figueira-black px-1 py-0.5 rounded-sm">
+              FIG
+            </span>
+          )}
         </div>
         <div className="text-sm font-semibold mt-1">CAMPEÃO</div>
       </div>
@@ -102,12 +139,23 @@ const KnockoutBracket = () => {
         <div className="flex flex-wrap justify-center gap-2">
           {promotedTeams.map(teamId => {
             const team = getTeamById(teamId);
+            const isFigueirense = teamId === 9;
+            
             return team ? (
               <div 
                 key={teamId} 
-                className="bg-brasil-green text-white px-3 py-1 rounded"
+                className={`px-3 py-1 rounded ${
+                  isFigueirense
+                    ? 'bg-figueira-black text-figueira-white border border-figueira-white'
+                    : 'bg-brasil-green text-white'
+                }`}
               >
                 {team.name}
+                {isFigueirense && (
+                  <span className="ml-1 text-xs bg-figueira-white text-figueira-black px-1 py-0.5 rounded-sm">
+                    FIG
+                  </span>
+                )}
               </div>
             ) : null;
           })}

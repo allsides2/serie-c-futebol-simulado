@@ -9,8 +9,13 @@ const StandingsTable = () => {
     return team ? team.name : 'Time Desconhecido';
   };
   
-  // Função para determinar a cor da linha com base na posição
-  const getRowClass = (position: number | undefined) => {
+  // Função para determinar a cor da linha com base na posição e time
+  const getRowClass = (position: number | undefined, teamId: number) => {
+    // Destaque para o Figueirense (ID 9)
+    if (teamId === 9) {
+      return 'bg-figueira-black text-figueira-white font-bold border-l-4 border-figueira-white';
+    }
+    
     if (position === undefined) return '';
     
     if (position <= 8) {
@@ -42,10 +47,21 @@ const StandingsTable = () => {
           {standings.map((team, index) => (
             <tr 
               key={team.teamId} 
-              className={`border-b border-gray-100 hover:bg-gray-50 ${getRowClass(team.position)}`}
+              className={`border-b border-gray-100 hover:bg-gray-50 ${getRowClass(team.position, team.teamId)}`}
             >
               <td className="p-3 font-semibold">{team.position}</td>
-              <td className="p-3">{getTeamName(team.teamId)}</td>
+              <td className="p-3">
+                {team.teamId === 9 ? (
+                  <span className="flex items-center">
+                    {getTeamName(team.teamId)}
+                    <span className="ml-2 inline-block px-1.5 py-0.5 text-xs bg-figueira-white text-figueira-black rounded-sm">
+                      Destaque
+                    </span>
+                  </span>
+                ) : (
+                  getTeamName(team.teamId)
+                )}
+              </td>
               <td className="p-3 text-center font-bold">{team.points}</td>
               <td className="p-3 text-center">{team.matchesPlayed}</td>
               <td className="p-3 text-center">{team.wins}</td>
@@ -70,6 +86,10 @@ const StandingsTable = () => {
         <div className="flex items-center">
           <div className="w-4 h-4 bg-red-500 mr-2"></div>
           <span>Rebaixados (Z4)</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 bg-figueira-black mr-2 border border-figueira-white"></div>
+          <span className="font-bold">Figueirense</span>
         </div>
       </div>
     </div>
