@@ -3,6 +3,7 @@ import { FootballProvider } from '@/context/FootballContext';
 import Header from '@/components/Header';
 import TabMenu from '@/components/TabMenu';
 import { Toaster } from "@/components/ui/toaster";
+import { Star } from "lucide-react";
 
 const Index = () => {
   return (
