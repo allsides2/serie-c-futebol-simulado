@@ -1,3 +1,4 @@
+
 import { useFootball } from '@/context/FootballContext';
 
 const KnockoutBracket = () => {
@@ -10,6 +11,13 @@ const KnockoutBracket = () => {
   const quarterFinals = knockoutPairs.filter(pair => pair.stage === 'QUARTER');
   const semiFinals = knockoutPairs.filter(pair => pair.stage === 'SEMI');
   const final = knockoutPairs.find(pair => pair.stage === 'FINAL');
+  
+  const getTeamLogo = (teamId: number | null) => {
+    if (teamId === null) return 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=50&h=50&fit=crop';
+    const team = getTeamById(teamId);
+    // Return a placeholder if no logo URL is available
+    return team?.logoUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=50&h=50&fit=crop';
+  };
   
   // Função para renderizar time na chave
   const renderTeam = (teamId: number | null, isWinner: boolean = false) => {
@@ -26,7 +34,16 @@ const KnockoutBracket = () => {
       }`}>
         {team ? (
           <div className="flex items-center justify-between">
-            <span>{team.name}</span>
+            <div className="flex items-center">
+              <div className="w-5 h-5 rounded-full overflow-hidden mr-2 flex-shrink-0 bg-white">
+                <img 
+                  src={getTeamLogo(teamId)} 
+                  alt={`${team.name} logo`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span>{team.name}</span>
+            </div>
             {isFigueirense && (
               <span className="ml-1 px-1 py-0.5 text-xs bg-figueira-white text-figueira-black rounded-sm">
                 FIG
@@ -98,6 +115,13 @@ const KnockoutBracket = () => {
             ? 'bg-figueira-black text-figueira-white border-2 border-figueira-white' 
             : 'bg-brasil-yellow text-black'
         }`}>
+          <div className="w-6 h-6 rounded-full overflow-hidden mr-2 flex-shrink-0 bg-white">
+            <img 
+              src={getTeamLogo(final.winnerId)} 
+              alt={`${champion.name} logo`}
+              className="w-full h-full object-cover"
+            />
+          </div>
           {champion.name}
           {isFigueirenseChampion && (
             <span className="ml-2 text-xs bg-figueira-white text-figueira-black px-1 py-0.5 rounded-sm">
@@ -144,12 +168,19 @@ const KnockoutBracket = () => {
             return team ? (
               <div 
                 key={teamId} 
-                className={`px-3 py-1 rounded ${
+                className={`px-3 py-1 rounded flex items-center ${
                   isFigueirense
                     ? 'bg-figueira-black text-figueira-white border border-figueira-white'
                     : 'bg-brasil-green text-white'
                 }`}
               >
+                <div className="w-5 h-5 rounded-full overflow-hidden mr-2 flex-shrink-0 bg-white">
+                  <img 
+                    src={getTeamLogo(teamId)} 
+                    alt={`${team.name} logo`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 {team.name}
                 {isFigueirense && (
                   <span className="ml-1 text-xs bg-figueira-white text-figueira-black px-1 py-0.5 rounded-sm">
@@ -217,3 +248,4 @@ const KnockoutBracket = () => {
 };
 
 export default KnockoutBracket;
+

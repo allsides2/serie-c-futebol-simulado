@@ -23,6 +23,12 @@ const MatchList: React.FC<MatchListProps> = ({ round }) => {
     const team = teams.find(team => team.id === teamId);
     return team ? team.shortName : '???';
   };
+
+  const getTeamLogo = (teamId: number) => {
+    const team = teams.find(team => team.id === teamId);
+    // Return a placeholder if no logo URL is available
+    return team?.logoUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=50&h=50&fit=crop';
+  };
   
   // Check if match involves Figueirense (ID 9)
   const isFigueirenseMatch = (match: Match) => {
@@ -57,11 +63,18 @@ const MatchList: React.FC<MatchListProps> = ({ round }) => {
         >
           <CardContent className="p-0">
             <div className={`flex items-center p-4 ${isFigueirenseMatch(match) ? 'bg-gray-50' : ''}`}>
-              <div className="w-1/3 text-right pr-2">
+              <div className="w-1/3 text-right pr-2 flex items-center justify-end">
                 <p className={getTeamNameClass(match.homeTeamId)}>
                   {getTeamName(match.homeTeamId)}
                   {match.homeTeamId === 9 && <span className="ml-2 inline-block px-1 py-0.5 text-xs rounded-sm bg-figueira-black text-figueira-white">FIG</span>}
                 </p>
+                <div className="w-6 h-6 rounded-full overflow-hidden ml-2 flex-shrink-0">
+                  <img 
+                    src={getTeamLogo(match.homeTeamId)} 
+                    alt={`${getTeamName(match.homeTeamId)} logo`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
               
               <div className="w-1/3 flex justify-center items-center space-x-3">
@@ -88,7 +101,14 @@ const MatchList: React.FC<MatchListProps> = ({ round }) => {
                 </div>
               </div>
               
-              <div className="w-1/3 pl-2">
+              <div className="w-1/3 pl-2 flex items-center">
+                <div className="w-6 h-6 rounded-full overflow-hidden mr-2 flex-shrink-0">
+                  <img 
+                    src={getTeamLogo(match.awayTeamId)} 
+                    alt={`${getTeamName(match.awayTeamId)} logo`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <p className={getTeamNameClass(match.awayTeamId)}>
                   {getTeamName(match.awayTeamId)}
                   {match.awayTeamId === 9 && <span className="ml-2 inline-block px-1 py-0.5 text-xs rounded-sm bg-figueira-black text-figueira-white">FIG</span>}

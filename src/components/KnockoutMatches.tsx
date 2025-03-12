@@ -36,6 +36,13 @@ const KnockoutMatches = () => {
     return team ? team.shortName : '???';
   };
   
+  const getTeamLogo = (teamId: number | null) => {
+    if (teamId === null) return 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=50&h=50&fit=crop';
+    const team = teams.find(team => team.id === teamId);
+    // Return a placeholder if no logo URL is available
+    return team?.logoUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=50&h=50&fit=crop';
+  };
+  
   const handleScoreChange = (match: KnockoutMatch, isHome: boolean, value: string) => {
     const goals = value === '' ? null : parseInt(value);
     
@@ -103,8 +110,23 @@ const KnockoutMatches = () => {
         return (
           <div key={key} className="space-y-4 mb-6">
             <div className="border-b pb-2">
-              <h4 className="font-medium">
-                {homeTeam?.name ?? '—'} vs {awayTeam?.name ?? '—'}
+              <h4 className="font-medium flex items-center">
+                <div className="w-6 h-6 rounded-full overflow-hidden mr-2 flex-shrink-0">
+                  <img 
+                    src={getTeamLogo(homeTeam?.id || null)} 
+                    alt={`${homeTeam?.name || '—'} logo`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {homeTeam?.name ?? '—'} vs 
+                <div className="w-6 h-6 rounded-full overflow-hidden mx-2 flex-shrink-0">
+                  <img 
+                    src={getTeamLogo(awayTeam?.id || null)} 
+                    alt={`${awayTeam?.name || '—'} logo`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {awayTeam?.name ?? '—'}
                 {(matches[0].played && matches[1].played) && 
                   <span className="ml-2 text-sm text-gray-500">
                     (Agregado: {homeAgg} × {awayAgg})
@@ -120,8 +142,15 @@ const KnockoutMatches = () => {
                     Jogo {match.legNumber === 1 ? 'de IDA' : 'de VOLTA'}
                   </div>
                   <div className="flex items-center p-4">
-                    <div className="w-1/3 text-right pr-2">
+                    <div className="w-1/3 text-right pr-2 flex items-center justify-end">
                       <p className="font-semibold">{getTeamName(match.homeTeamId)}</p>
+                      <div className="w-6 h-6 rounded-full overflow-hidden ml-2 flex-shrink-0">
+                        <img 
+                          src={getTeamLogo(match.homeTeamId)} 
+                          alt={`${getTeamName(match.homeTeamId)} logo`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </div>
                     
                     <div className="w-1/3 flex justify-center items-center space-x-3">
@@ -150,7 +179,14 @@ const KnockoutMatches = () => {
                       </div>
                     </div>
                     
-                    <div className="w-1/3 pl-2">
+                    <div className="w-1/3 pl-2 flex items-center">
+                      <div className="w-6 h-6 rounded-full overflow-hidden mr-2 flex-shrink-0">
+                        <img 
+                          src={getTeamLogo(match.awayTeamId)} 
+                          alt={`${getTeamName(match.awayTeamId)} logo`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                       <p className="font-semibold">{getTeamName(match.awayTeamId)}</p>
                     </div>
                   </div>

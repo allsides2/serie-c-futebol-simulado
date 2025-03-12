@@ -1,5 +1,6 @@
 
 import { useFootball } from '@/context/FootballContext';
+import Image from 'next/image';
 
 const StandingsTable = () => {
   const { standings, teams } = useFootball();
@@ -7,6 +8,12 @@ const StandingsTable = () => {
   const getTeamName = (teamId: number) => {
     const team = teams.find(team => team.id === teamId);
     return team ? team.name : 'Time Desconhecido';
+  };
+  
+  const getTeamLogo = (teamId: number) => {
+    const team = teams.find(team => team.id === teamId);
+    // Return a placeholder if no logo URL is available
+    return team?.logoUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=50&h=50&fit=crop';
   };
   
   // Função para determinar a cor da linha com base na posição e time
@@ -51,16 +58,25 @@ const StandingsTable = () => {
             >
               <td className="p-3 font-semibold">{team.position}</td>
               <td className="p-3">
-                {team.teamId === 9 ? (
-                  <span className="flex items-center">
-                    {getTeamName(team.teamId)}
-                    <span className="ml-2 inline-block px-1.5 py-0.5 text-xs bg-figueira-white text-figueira-black rounded-sm">
-                      Destaque
+                <div className="flex items-center">
+                  <div className="w-6 h-6 rounded-full overflow-hidden mr-2 flex-shrink-0">
+                    <img 
+                      src={getTeamLogo(team.teamId)} 
+                      alt={`${getTeamName(team.teamId)} logo`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {team.teamId === 9 ? (
+                    <span className="flex items-center">
+                      {getTeamName(team.teamId)}
+                      <span className="ml-2 inline-block px-1.5 py-0.5 text-xs bg-figueira-white text-figueira-black rounded-sm">
+                        Destaque
+                      </span>
                     </span>
-                  </span>
-                ) : (
-                  getTeamName(team.teamId)
-                )}
+                  ) : (
+                    getTeamName(team.teamId)
+                  )}
+                </div>
               </td>
               <td className="p-3 text-center font-bold">{team.points}</td>
               <td className="p-3 text-center">{team.matchesPlayed}</td>
