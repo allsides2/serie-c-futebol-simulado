@@ -1,13 +1,21 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { FootballProvider } from '@/context/FootballContext';
+import Header from '@/components/Header';
+import TabMenu from '@/components/TabMenu';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <FootballProvider>
+      <div className="flex flex-col min-h-screen bg-gray-50">
+        <Header />
+        <main className="flex-1 pb-10">
+          <TabMenu />
+        </main>
+        <footer className="bg-brasil-green text-white p-4 text-center">
+          <p className="text-sm">Simulador da Série C do Campeonato Brasileiro 2025</p>
+        </footer>
       </div>
-    </div>
+    </FootballProvider>
   );
 };
 
