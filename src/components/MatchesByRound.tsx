@@ -29,7 +29,7 @@ const MatchesByRound = () => {
           variant="outline"
           onClick={prevRound}
           disabled={selectedRound <= 1}
-          className="h-10 px-3"
+          className="h-10 px-3 bg-figueira-white text-figueira-black border-figueira-black hover:bg-figueira-gray hover:text-figueira-white"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -38,7 +38,7 @@ const MatchesByRound = () => {
           variant="outline"
           onClick={nextRound}
           disabled={selectedRound >= totalRounds}
-          className="h-10 px-3"
+          className="h-10 px-3 bg-figueira-white text-figueira-black border-figueira-black hover:bg-figueira-gray hover:text-figueira-white"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -51,7 +51,11 @@ const MatchesByRound = () => {
           <Button
             key={round}
             variant={round === selectedRound ? 'default' : 'outline'}
-            className={`h-10 w-10 p-0 ${round === currentRound && round !== selectedRound ? 'border-brasil-green border-2' : ''}`}
+            className={`h-10 w-10 p-0 ${
+              round === selectedRound 
+                ? 'bg-figueira-black text-figueira-white' 
+                : 'bg-figueira-white text-figueira-black border-figueira-black'
+            } ${round === currentRound && round !== selectedRound ? 'border-figueira-gray border-2' : ''}`}
             onClick={() => setSelectedRound(round)}
           >
             {round}

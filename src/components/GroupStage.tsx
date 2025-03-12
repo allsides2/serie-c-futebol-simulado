@@ -7,7 +7,8 @@ import {
   CalendarDays, 
   RefreshCw, 
   PlusCircle, 
-  TrendingUp 
+  TrendingUp,
+  Trophy 
 } from 'lucide-react';
 import StandingsTable from './StandingsTable';
 import MatchesByRound from './MatchesByRound';
@@ -30,7 +31,7 @@ const GroupStage = () => {
           <Button 
             variant={view === 'standings' ? 'default' : 'outline'} 
             onClick={() => setView('standings')}
-            className="flex items-center gap-2"
+            className={`flex items-center gap-2 ${view === 'standings' ? 'bg-figueira-black text-figueira-white' : 'bg-figueira-white text-figueira-black border-figueira-black'}`}
           >
             <BarChart4 className="h-4 w-4" />
             <span>Classificação</span>
@@ -38,7 +39,7 @@ const GroupStage = () => {
           <Button 
             variant={view === 'matches' ? 'default' : 'outline'} 
             onClick={() => setView('matches')}
-            className="flex items-center gap-2"
+            className={`flex items-center gap-2 ${view === 'matches' ? 'bg-figueira-black text-figueira-white' : 'bg-figueira-white text-figueira-black border-figueira-black'}`}
           >
             <CalendarDays className="h-4 w-4" />
             <span>Jogos</span>
@@ -48,7 +49,7 @@ const GroupStage = () => {
           <Button 
             variant="outline" 
             onClick={() => simulateRound(currentRound)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 bg-figueira-white text-figueira-black border-figueira-black hover:bg-figueira-gray hover:text-figueira-white"
           >
             <PlusCircle className="h-4 w-4" />
             <span>Simular Rodada {currentRound}</span>
@@ -56,7 +57,7 @@ const GroupStage = () => {
           <Button 
             variant="outline" 
             onClick={simulateAllRemainingMatches}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 bg-figueira-white text-figueira-black border-figueira-black hover:bg-figueira-gray hover:text-figueira-white"
           >
             <TrendingUp className="h-4 w-4" />
             <span>Simular Tudo</span>
@@ -64,14 +65,14 @@ const GroupStage = () => {
           <Button 
             variant="outline" 
             onClick={resetAllResults}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 bg-figueira-white text-figueira-black border-figueira-black hover:bg-figueira-gray hover:text-figueira-white"
           >
             <RefreshCw className="h-4 w-4" />
             <span>Resetar</span>
           </Button>
           <Button 
             onClick={advanceToKnockout}
-            className="bg-brasil-yellow text-black hover:bg-brasil-yellow/80"
+            className="bg-figueira-black text-figueira-white hover:bg-figueira-gray"
           >
             <Trophy className="h-4 w-4 mr-2" />
             <span>Avançar para Mata-Mata</span>
@@ -79,7 +80,7 @@ const GroupStage = () => {
         </div>
       </div>
       
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="bg-figueira-white rounded-lg shadow-md p-4">
         {view === 'standings' && <StandingsTable />}
         {view === 'matches' && <MatchesByRound />}
       </div>
@@ -88,5 +89,3 @@ const GroupStage = () => {
 };
 
 export default GroupStage;
-
-import { Trophy } from 'lucide-react';

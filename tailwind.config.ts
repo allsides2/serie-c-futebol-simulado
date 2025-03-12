@@ -28,6 +28,11 @@ export default {
 				'brasil-green': '#009c3b',
 				'brasil-yellow': '#ffdf00',
 				'brasil-blue': '#002776',
+				// Cores do Figueirense
+				'figueira-black': '#000000',
+				'figueira-white': '#FFFFFF',
+				'figueira-gray': '#333333',
+				'figueira-light-gray': '#F1F1F1',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'

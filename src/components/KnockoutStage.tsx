@@ -17,12 +17,14 @@ const KnockoutStage = () => {
           <Button 
             variant={view === 'bracket' ? 'default' : 'outline'} 
             onClick={() => setView('bracket')}
+            className={`${view === 'bracket' ? 'bg-figueira-black text-figueira-white' : 'bg-figueira-white text-figueira-black border-figueira-black'}`}
           >
             Chaveamento
           </Button>
           <Button 
             variant={view === 'matches' ? 'default' : 'outline'} 
             onClick={() => setView('matches')}
+            className={`${view === 'matches' ? 'bg-figueira-black text-figueira-white' : 'bg-figueira-white text-figueira-black border-figueira-black'}`}
           >
             Jogos
           </Button>
@@ -31,7 +33,7 @@ const KnockoutStage = () => {
           <Button 
             variant="outline" 
             onClick={resetAllResults}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 bg-figueira-white text-figueira-black border-figueira-black hover:bg-figueira-gray hover:text-figueira-white"
           >
             <RefreshCw className="h-4 w-4" />
             <span>Resetar Campeonato</span>
@@ -39,14 +41,14 @@ const KnockoutStage = () => {
         </div>
       </div>
       
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="bg-figueira-white rounded-lg shadow-md p-4">
         {view === 'bracket' && <KnockoutBracket />}
         {view === 'matches' && <KnockoutMatches />}
       </div>
       
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="bg-figueira-white rounded-lg shadow-md p-4">
         <div className="flex items-center gap-2">
-          <Trophy className="text-brasil-yellow h-5 w-5" />
+          <Trophy className="text-figueira-black h-5 w-5" />
           <p className="font-semibold">Os 4 semifinalistas garantem acesso à Série B 2026!</p>
         </div>
       </div>

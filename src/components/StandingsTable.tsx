@@ -14,9 +14,9 @@ const StandingsTable = () => {
     if (position === undefined) return '';
     
     if (position <= 8) {
-      return 'bg-green-50 border-l-4 border-brasil-green';
+      return 'bg-gray-100 border-l-4 border-figueira-black';
     } else if (position >= 17) {
-      return 'bg-red-50 border-l-4 border-red-500';
+      return 'bg-gray-100 border-l-4 border-red-500';
     }
     return '';
   };
@@ -25,7 +25,7 @@ const StandingsTable = () => {
     <div className="overflow-x-auto">
       <table className="w-full min-w-[700px] bg-white">
         <thead>
-          <tr className="border-b-2 border-gray-200 text-left">
+          <tr className="border-b-2 border-figueira-black text-left bg-figueira-black text-figueira-white">
             <th className="p-3 font-semibold">#</th>
             <th className="p-3 font-semibold">Time</th>
             <th className="p-3 font-semibold text-center">P</th>
@@ -64,7 +64,7 @@ const StandingsTable = () => {
       
       <div className="mt-4 flex flex-col sm:flex-row gap-4 text-sm">
         <div className="flex items-center">
-          <div className="w-4 h-4 bg-brasil-green mr-2"></div>
+          <div className="w-4 h-4 bg-figueira-black mr-2"></div>
           <span>Classificados para o mata-mata (G8)</span>
         </div>
         <div className="flex items-center">

@@ -17,13 +17,16 @@ const TabMenu = () => {
   return (
     <div className="container mx-auto mt-4 px-4">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 h-14">
-          <TabsTrigger value="group" className="text-lg font-medium">
+        <TabsList className="grid w-full grid-cols-2 h-14 bg-figueira-gray">
+          <TabsTrigger 
+            value="group" 
+            className="text-lg font-medium data-[state=active]:bg-figueira-black data-[state=active]:text-figueira-white"
+          >
             Fase de Grupos
           </TabsTrigger>
           <TabsTrigger 
             value="knockout" 
-            className="text-lg font-medium"
+            className="text-lg font-medium data-[state=active]:bg-figueira-black data-[state=active]:text-figueira-white"
             disabled={getCurrentStage() === 'GROUP'}
           >
             Mata-Mata
