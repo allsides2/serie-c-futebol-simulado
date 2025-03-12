@@ -157,7 +157,11 @@ export const FootballProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     
     setGroupMatches(updatedMatches);
     updateCurrentRound();
-    toast.success(`Rodada ${round} simulada com sucesso!`);
+    toast({
+      title: "Rodada Simulada",
+      description: `Rodada ${round} simulada com sucesso!`,
+      variant: "default",
+    });
   };
 
   const simulateAllRemainingMatches = () => {
@@ -178,7 +182,11 @@ export const FootballProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     
     setGroupMatches(updatedMatches);
     setCurrentRound(19);
-    toast.success('Todas as partidas restantes foram simuladas!');
+    toast({
+      title: "Simulação Completa",
+      description: "Todas as partidas restantes foram simuladas!",
+      variant: "default",
+    });
   };
 
   const resetAllResults = () => {
@@ -195,7 +203,11 @@ export const FootballProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setKnockoutMatches(resetKnockoutMatches);
     setCurrentRound(1);
     setCurrentStage('GROUP');
-    toast.success('Todos os resultados foram resetados!');
+    toast({
+      title: "Resultados Resetados",
+      description: "Todos os resultados foram resetados!",
+      variant: "default",
+    });
   };
 
   const updateCurrentRound = () => {
@@ -222,14 +234,22 @@ export const FootballProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const allMatchesPlayed = groupMatches.every(match => match.played);
     
     if (!allMatchesPlayed) {
-      toast.error('Complete todas as rodadas antes de avançar para o mata-mata!');
+      toast({
+        title: "Ação Impossível",
+        description: "Complete todas as rodadas antes de avançar para o mata-mata!",
+        variant: "destructive",
+      });
       return;
     }
     
     const topEight = standings.slice(0, 8).map(stats => stats.teamId);
     
     if (topEight.length !== 8) {
-      toast.error('Erro ao determinar os classificados para o mata-mata!');
+      toast({
+        title: "Erro",
+        description: "Erro ao determinar os classificados para o mata-mata!",
+        variant: "destructive",
+      });
       return;
     }
     
@@ -319,7 +339,11 @@ export const FootballProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     
     setKnockoutMatches(updatedKnockoutMatches);
     setCurrentStage('KNOCKOUT');
-    toast.success('Fase de mata-mata iniciada!');
+    toast({
+      title: "Mata-mata Iniciado",
+      description: "Fase de mata-mata iniciada!",
+      variant: "default",
+    });
   };
 
   const updateKnockoutMatchResult = (matchId: number, homeGoals: number, awayGoals: number) => {

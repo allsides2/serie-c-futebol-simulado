@@ -2,6 +2,7 @@
 import { FootballProvider } from '@/context/FootballContext';
 import Header from '@/components/Header';
 import TabMenu from '@/components/TabMenu';
+import { Toaster } from "@/components/ui/toaster";
 
 const Index = () => {
   return (
@@ -17,6 +18,7 @@ const Index = () => {
             <p className="text-xs mt-1">Figueaço - Canal de Torcedores do Figueirense</p>
           </div>
         </footer>
+        <Toaster />
       </div>
     </FootballProvider>
   );
