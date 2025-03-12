@@ -1,4 +1,3 @@
-
 import { Trophy, Heart, Star } from 'lucide-react';
 
 const Header = () => {
@@ -15,9 +14,9 @@ const Header = () => {
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <div className="hidden md:flex items-center bg-figueira-white text-figueira-black px-3 py-1 rounded-lg">
-            <Star className="h-4 w-4 mr-1 text-figueira-black fill-figueira-black" />
-            <span className="text-sm font-bold">Figueirense FC</span>
+          <div className="hidden md:flex items-center group px-3 py-1 rounded-lg bg-figueira-white/10 hover:bg-figueira-white/20 transition-colors">
+            <Star className="h-4 w-4 mr-1 text-figueira-white opacity-60 group-hover:opacity-100" />
+            <span className="text-sm font-bold text-figueira-white opacity-60 group-hover:opacity-100">Figueirense FC</span>
           </div>
           <div className="hidden md:block text-sm md:text-base">
             <p>Simulador do Campeonato Brasileiro</p>

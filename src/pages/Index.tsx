@@ -15,9 +15,9 @@ const Index = () => {
           <div className="container mx-auto mt-4 px-4">
             <div className="bg-figueira-black text-figueira-white py-2 px-4 rounded-md mb-4 flex items-center justify-between">
               <h2 className="text-lg font-bold">Simulador Figueaço</h2>
-              <div className="flex items-center">
-                <Star className="h-4 w-4 mr-1 text-figueira-white fill-figueira-white" />
-                <span className="text-sm">Destaque: Figueirense</span>
+              <div className="flex items-center group px-2 py-1 rounded-md transition-colors hover:bg-white/10">
+                <Star className="h-4 w-4 mr-1 text-figueira-white opacity-60 group-hover:opacity-100" />
+                <span className="text-sm text-figueira-white opacity-60 group-hover:opacity-100">Destaque: Figueirense</span>
               </div>
             </div>
           </div>
