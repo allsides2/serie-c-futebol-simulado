@@ -2,7 +2,6 @@
 import { FootballProvider } from '@/context/FootballContext';
 import Header from '@/components/Header';
 import TabMenu from '@/components/TabMenu';
-import Simulator from '@/components/Simulator';
 import { Toaster } from "@/components/ui/toaster";
 
 const MatchSimulator = () => {
@@ -16,9 +15,8 @@ const MatchSimulator = () => {
             <div className="bg-figueira-black text-figueira-white py-2 px-4 rounded-md mb-4">
               <h2 className="text-lg font-bold">Simulador Figueiraço</h2>
             </div>
-            <Simulator />
             
-            {/* Additional simulator content can be added here */}
+            {/* Main simulator content */}
             <div className="mt-8">
               <h3 className="text-xl font-bold mb-4">Como usar o simulador</h3>
               <p className="mb-4">
