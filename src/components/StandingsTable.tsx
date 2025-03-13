@@ -1,6 +1,5 @@
 
 import { useFootball } from '@/context/FootballContext';
-import Image from 'next/image';
 
 const StandingsTable = () => {
   const { standings, teams } = useFootball();

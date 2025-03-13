@@ -2,6 +2,7 @@
 import { FootballProvider } from '@/context/FootballContext';
 import Header from '@/components/Header';
 import TabMenu from '@/components/TabMenu';
+import MainPage from '@/components/MainPage';
 import { Toaster } from "@/components/ui/toaster";
 import { Star } from "lucide-react";
 
@@ -20,6 +21,7 @@ const Index = () => {
                 <span className="text-sm text-figueira-white opacity-60 group-hover:opacity-100">Destaque: Figueirense</span>
               </div>
             </div>
+            <MainPage />
           </div>
           <TabMenu />
         </main>
