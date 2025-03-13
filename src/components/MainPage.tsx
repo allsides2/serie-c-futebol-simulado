@@ -2,9 +2,10 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Youtube, Users, Trophy, Calendar, Star, Video, Link2, ArrowRight } from "lucide-react";
+import { Youtube, Users, Trophy, Calendar, Star, Link2 } from "lucide-react";
 import Simulator from './Simulator';
 import { useToast } from "@/components/ui/use-toast";
+import YouTubeLatestVideos from './YouTubeLatestVideos';
 
 const MainPage = () => {
   const [subscribers, setSubscribers] = useState<number | null>(null);
@@ -38,30 +39,6 @@ const MainPage = () => {
     
     return () => clearInterval(intervalId);
   }, [toast]);
-
-  const videos = [
-    {
-      id: 1,
-      title: 'Melhores Momentos: Figueirense 3 x 0 Brusque',
-      thumbnail: 'https://images.unsplash.com/photo-1562552052-296a66888f38?w=500&h=280&fit=crop',
-      views: '2.3K',
-      date: '2 dias atrás',
-    },
-    {
-      id: 2,
-      title: 'Análise Tática: Como o Figueirense deve jogar na Série C',
-      thumbnail: 'https://images.unsplash.com/photo-1508098682722-e99c643e7f0c?w=500&h=280&fit=crop',
-      views: '1.8K',
-      date: '5 dias atrás',
-    },
-    {
-      id: 3,
-      title: 'Reforços para 2025: Quem vem aí?',
-      thumbnail: 'https://images.unsplash.com/photo-1543351611-58f69d7c1781?w=500&h=280&fit=crop',
-      views: '3.1K',
-      date: '1 semana atrás',
-    }
-  ];
 
   const stats = [
     { title: 'Fundação', value: '1921', icon: <Calendar className="h-5 w-5 text-figueira-black" /> },
@@ -168,49 +145,8 @@ const MainPage = () => {
         </Card>
       </div>
 
-      {/* Videos Section with Improved Design */}
-      <div className="mb-12">
-        <div className="flex items-center mb-6 justify-between">
-          <div className="flex items-center">
-            <div className="w-1.5 h-6 bg-figueira-black rounded-full mr-2"></div>
-            <h2 className="text-2xl font-bold">Vídeos Recentes</h2>
-          </div>
-          <Button variant="ghost" className="text-figueira-black hover:text-figueira-gray">
-            Ver Todos <ArrowRight className="ml-1 h-4 w-4" />
-          </Button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {videos.map((video) => (
-            <Card key={video.id} className="overflow-hidden hover:shadow-md transition group border-none shadow">
-              <div className="relative">
-                <img 
-                  src={video.thumbnail} 
-                  alt={video.title} 
-                  className="w-full h-48 object-cover transition-transform group-hover:scale-105"
-                />
-                <div className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                  {video.views} visualizações
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
-                <div className="absolute bottom-3 left-3 flex items-center">
-                  <div className="bg-red-600 rounded-full p-1.5 mr-2">
-                    <Video className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="text-white text-sm font-medium">{video.date}</span>
-                </div>
-              </div>
-              <CardContent className="p-4">
-                <h3 className="font-bold text-lg line-clamp-2 group-hover:text-figueira-black transition-colors">{video.title}</h3>
-                <div className="flex justify-end mt-3">
-                  <Button size="sm" variant="outline" className="border-figueira-black text-figueira-black hover:bg-figueira-black hover:text-white">
-                    Assistir Agora
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
+      {/* Videos Section - Now using the YouTubeLatestVideos component */}
+      <YouTubeLatestVideos />
 
       {/* Footer CTA with Improved Design */}
       <Card className="bg-gradient-to-r from-figueira-light-gray to-white border-none shadow-lg">
@@ -231,12 +167,24 @@ const MainPage = () => {
             Inscreva-se no canal e não perca nenhuma atualização!
           </p>
           <div className="flex justify-center gap-4 flex-wrap">
-            <Button className="bg-red-600 hover:bg-red-700">
-              <Youtube className="mr-2" /> Inscrever-se no Canal
-            </Button>
-            <Button variant="outline" className="border-figueira-black text-figueira-black hover:bg-figueira-black hover:text-white">
-              <Users className="mr-2" /> Comunidade
-            </Button>
+            <a 
+              href="https://www.youtube.com/@MemoriasFigueirense?sub_confirmation=1" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <Button className="bg-red-600 hover:bg-red-700">
+                <Youtube className="mr-2" /> Inscrever-se no Canal
+              </Button>
+            </a>
+            <a 
+              href="https://www.youtube.com/@MemoriasFigueirense/community" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" className="border-figueira-black text-figueira-black hover:bg-figueira-black hover:text-white">
+                <Users className="mr-2" /> Comunidade
+              </Button>
+            </a>
           </div>
         </CardContent>
       </Card>
