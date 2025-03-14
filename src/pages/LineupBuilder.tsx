@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/Header";
@@ -7,7 +6,8 @@ import PlayerSelection from "@/components/PlayerSelection";
 import PredictionSubmission from "@/components/PredictionSubmission";
 import Leaderboard from "@/components/Leaderboard";
 import { Button } from "@/components/ui/button";
-import { Save, RotateCcw, Share2, MoveHorizontal } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Save, RotateCcw, Share2, MoveHorizontal, User } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { createLineupSlotsForFormation } from '@/utils/playerUtils';
 
@@ -55,6 +55,7 @@ const LineupBuilder = () => {
   const [lineup, setLineup] = useState<LineupSlot[]>([]);
   const [dragOverSlotIndex, setDragOverSlotIndex] = useState<number | null>(null);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [userName, setUserName] = useState('');
 
   // Initialize lineup based on formation
   useEffect(() => {
@@ -152,9 +153,9 @@ const LineupBuilder = () => {
     });
   };
 
-  const handlePredictionSubmit = (userName: string, lineup: LineupSlot[]) => {
+  const handlePredictionSubmit = (name: string, lineup: LineupSlot[]) => {
     // In the future, this would save to a database
-    console.log('Prediction submitted:', { userName, lineup });
+    console.log('Prediction submitted:', { name, lineup });
     
     // Show leaderboard after submission
     setShowLeaderboard(true);
@@ -164,7 +165,29 @@ const LineupBuilder = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="container mx-auto py-6 px-4">
-        <h1 className="text-3xl font-bold text-figueira-black mb-6">Escalação da Galera</h1>
+        <h1 className="text-3xl font-bold text-figueira-black mb-3">Escalação da Galera</h1>
+        
+        {/* User name input moved to the top */}
+        <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 mb-6">
+          <h2 className="text-lg font-semibold text-amber-800 mb-2 flex items-center">
+            <User className="mr-2 h-5 w-5" /> 
+            Identificação do Torcedor
+          </h2>
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            <div className="w-full md:w-1/2">
+              <Input
+                placeholder="Digite seu nome..."
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="border-amber-300 focus:border-amber-500"
+              />
+            </div>
+            <div className="w-full md:w-1/2 text-sm text-amber-800">
+              Acerte a escalação do técnico para o próximo jogo e apareça no ranking!
+            </div>
+          </div>
+        </div>
+        
         <p className="text-gray-600 mb-6">
           Monte a escalação do Figueirense que você acha que o técnico vai usar no próximo jogo! 
           Escolha o esquema tático, posicione os jogadores e envie seu palpite.
@@ -221,7 +244,7 @@ const LineupBuilder = () => {
               
               <PredictionSubmission 
                 lineup={lineup}
-                onSubmit={handlePredictionSubmit}
+                onSubmit={(_, lineupSubmit) => handlePredictionSubmit(userName, lineupSubmit)}
               />
             </div>
           </div>
@@ -234,7 +257,7 @@ const LineupBuilder = () => {
               </CardHeader>
               <CardContent>
                 <div className="relative bg-gradient-to-b from-green-500 to-green-600 w-full h-[500px] rounded-lg overflow-hidden border-4 border-white shadow-md">
-                  {/* Field markings */}
+                  {/* Field markings - prettier design */}
                   <div className="absolute w-full h-full border-2 border-white/70"></div>
                   
                   {/* Center circle */}
@@ -267,6 +290,13 @@ const LineupBuilder = () => {
                         key={i} 
                         className="absolute w-full border-t border-white/20"
                         style={{ top: `${i * 10}%` }}
+                      ></div>
+                    ))}
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div 
+                        key={`v-${i}`} 
+                        className="absolute h-full border-l border-white/20"
+                        style={{ left: `${i * 10}%` }}
                       ></div>
                     ))}
                   </div>

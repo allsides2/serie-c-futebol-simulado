@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ListOrdered, Medal, Calendar } from "lucide-react";
+import { ListOrdered, Medal, Calendar, TrendingUp, ChevronDown } from "lucide-react";
 import { getPredictions } from './PredictionSubmission';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface LeaderboardEntry {
   userName: string;
@@ -64,6 +65,15 @@ const Leaderboard: React.FC = () => {
       default: return "text-gray-500";
     }
   };
+
+  const getPositionBackground = (index: number): string => {
+    switch(index) {
+      case 0: return "bg-yellow-100";
+      case 1: return "bg-gray-100";
+      case 2: return "bg-amber-100";
+      default: return index % 2 === 0 ? "bg-white" : "bg-gray-50";
+    }
+  };
   
   return (
     <Card className="h-full">
@@ -86,29 +96,33 @@ const Leaderboard: React.FC = () => {
                 Nenhum palpite registrado ainda. Seja o primeiro!
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="rounded-md overflow-hidden border border-gray-200">
+                <div className="bg-gray-100 p-2 font-medium text-sm grid grid-cols-12">
+                  <div className="col-span-1 text-center">#</div>
+                  <div className="col-span-6">Torcedor</div>
+                  <div className="col-span-3 text-right">Pontos</div>
+                  <div className="col-span-2 text-right">Palpites</div>
+                </div>
+                
                 {leaderboard.map((entry, index) => (
                   <div 
                     key={entry.userName}
-                    className={`flex items-center justify-between p-3 rounded-md ${
-                      index < 3 ? 'bg-gray-50 border border-gray-200' : ''
-                    }`}
+                    className={`grid grid-cols-12 p-2 items-center ${getPositionBackground(index)}`}
                   >
-                    <div className="flex items-center">
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 ${
-                        index < 3 ? 'bg-gray-100' : ''
-                      }`}>
-                        {index < 3 ? (
-                          <Medal className={`h-4 w-4 ${getMedalColor(index)}`} />
-                        ) : (
-                          <span className="text-sm font-medium">{index + 1}</span>
-                        )}
-                      </div>
-                      <span className="font-medium">{entry.userName}</span>
+                    <div className="col-span-1 flex justify-center">
+                      {index < 3 ? (
+                        <Medal className={`h-5 w-5 ${getMedalColor(index)}`} />
+                      ) : (
+                        <span className="text-sm font-medium">{index + 1}</span>
+                      )}
                     </div>
-                    <div className="text-sm">
-                      <span className="font-semibold">{entry.score}</span> pts 
-                      <span className="text-gray-500 ml-2">({entry.predictions} palpites)</span>
+                    <div className="col-span-6 font-medium truncate">{entry.userName}</div>
+                    <div className="col-span-3 text-right font-bold flex items-center justify-end">
+                      <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                      {entry.score}
+                    </div>
+                    <div className="col-span-2 text-right text-gray-500 text-sm">
+                      {entry.predictions}
                     </div>
                   </div>
                 ))}
@@ -118,26 +132,33 @@ const Leaderboard: React.FC = () => {
           
           <TabsContent value="rounds">
             <div className="mb-4">
-              <select 
-                className="w-full p-2 rounded-md border border-gray-300"
-                value={selectedRound}
-                onChange={(e) => setSelectedRound(e.target.value)}
+              <Select 
+                value={selectedRound} 
+                onValueChange={setSelectedRound}
               >
-                <option value="all">Todas as Rodadas</option>
-                {rounds.map(round => (
-                  <option key={round.id} value={round.id.toString()}>
-                    {round.name} ({new Date(round.date).toLocaleDateString()})
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-full">
+                  <div className="flex items-center">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    <SelectValue placeholder="Selecione uma rodada" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as Rodadas</SelectItem>
+                  {rounds.map(round => (
+                    <SelectItem key={round.id} value={round.id.toString()}>
+                      {round.name} ({new Date(round.date).toLocaleDateString()})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
-            <div className="flex items-center gap-2 mb-4 p-3 bg-gray-50 rounded-md border border-gray-200">
-              <Calendar className="h-4 w-4 text-gray-500" />
-              <span className="text-sm text-gray-600">
+            <div className="flex items-center gap-2 mb-4 p-3 bg-blue-50 rounded-md border border-blue-200">
+              <Calendar className="h-4 w-4 text-blue-500" />
+              <span className="text-sm text-blue-700 font-medium">
                 {selectedRound === "all" 
-                  ? "Exibindo ranking geral de todas as rodadas" 
-                  : `Exibindo ranking da Rodada ${selectedRound}`}
+                  ? "Ranking geral de todas as rodadas" 
+                  : `Ranking da Rodada ${selectedRound}`}
               </span>
             </div>
             
@@ -147,28 +168,29 @@ const Leaderboard: React.FC = () => {
                 Nenhum palpite registrado para esta rodada.
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="rounded-md overflow-hidden border border-gray-200">
+                <div className="bg-gray-100 p-2 font-medium text-sm grid grid-cols-12">
+                  <div className="col-span-1 text-center">#</div>
+                  <div className="col-span-7">Torcedor</div>
+                  <div className="col-span-4 text-right">Pontos</div>
+                </div>
+                
                 {leaderboard.map((entry, index) => (
                   <div 
                     key={entry.userName}
-                    className={`flex items-center justify-between p-3 rounded-md ${
-                      index < 3 ? 'bg-gray-50 border border-gray-200' : ''
-                    }`}
+                    className={`grid grid-cols-12 p-2 items-center ${getPositionBackground(index)}`}
                   >
-                    <div className="flex items-center">
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 ${
-                        index < 3 ? 'bg-gray-100' : ''
-                      }`}>
-                        {index < 3 ? (
-                          <Medal className={`h-4 w-4 ${getMedalColor(index)}`} />
-                        ) : (
-                          <span className="text-sm font-medium">{index + 1}</span>
-                        )}
-                      </div>
-                      <span className="font-medium">{entry.userName}</span>
+                    <div className="col-span-1 flex justify-center">
+                      {index < 3 ? (
+                        <Medal className={`h-5 w-5 ${getMedalColor(index)}`} />
+                      ) : (
+                        <span className="text-sm font-medium">{index + 1}</span>
+                      )}
                     </div>
-                    <div className="text-sm">
-                      <span className="font-semibold">{entry.score}</span> pts
+                    <div className="col-span-7 font-medium truncate">{entry.userName}</div>
+                    <div className="col-span-4 text-right font-bold flex items-center justify-end">
+                      <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                      {entry.score}
                     </div>
                   </div>
                 ))}
