@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Activity, Menu } from 'lucide-react';
+import { Home, Activity, Menu, Users } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import {
@@ -49,6 +49,17 @@ const MainNavigation = () => {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/lineup">
+                <NavigationMenuLink className={cn(
+                  navigationMenuTriggerStyle(),
+                  isActive('/lineup') && "bg-figueira-black text-white"
+                )}>
+                  <Users className="mr-2 h-4 w-4" />
+                  Escalação
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
@@ -90,6 +101,19 @@ const MainNavigation = () => {
                 >
                   <Activity className="mr-2 h-5 w-5" />
                   Simulador
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/lineup" 
+                  className={cn(
+                    "flex items-center p-2 rounded-lg",
+                    isActive('/lineup') ? "bg-figueira-black text-white" : "hover:bg-gray-100"
+                  )}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Users className="mr-2 h-5 w-5" />
+                  Escalação
                 </Link>
               </li>
             </ul>
