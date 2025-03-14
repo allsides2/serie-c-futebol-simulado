@@ -1,12 +1,15 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/Header";
 import FormationSelector from "@/components/FormationSelector";
 import PlayerSelection from "@/components/PlayerSelection";
+import PredictionSubmission from "@/components/PredictionSubmission";
+import Leaderboard from "@/components/Leaderboard";
 import { Button } from "@/components/ui/button";
 import { Save, RotateCcw, Share2, MoveHorizontal } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { createLineupSlotsForFormation } from '@/utils/playerUtils';
 
 // Temporary player data until we have a database
 const playerOptions: Player[] = [
@@ -48,91 +51,14 @@ export type LineupSlot = {
 
 const LineupBuilder = () => {
   const { toast } = useToast();
-  const [formation, setFormation] = useState<Formation>('4-3-3');
+  const [formation, setFormation] = useState<Formation | string>('4-3-3');
   const [lineup, setLineup] = useState<LineupSlot[]>([]);
   const [dragOverSlotIndex, setDragOverSlotIndex] = useState<number | null>(null);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   // Initialize lineup based on formation
-  React.useEffect(() => {
-    let newLineup: LineupSlot[] = [];
-    
-    switch(formation) {
-      case '4-3-3':
-        newLineup = [
-          { position: 'GOL', player: null, x: 50, y: 90 },
-          { position: 'ZAG', player: null, x: 30, y: 70 },
-          { position: 'ZAG', player: null, x: 70, y: 70 },
-          { position: 'LAD', player: null, x: 10, y: 70 },
-          { position: 'LAE', player: null, x: 90, y: 70 },
-          { position: 'VOL', player: null, x: 30, y: 50 },
-          { position: 'VOL', player: null, x: 70, y: 50 },
-          { position: 'MEI', player: null, x: 50, y: 40 },
-          { position: 'ATA', player: null, x: 30, y: 20 },
-          { position: 'ATA', player: null, x: 70, y: 20 },
-          { position: 'ATA', player: null, x: 50, y: 10 }
-        ];
-        break;
-      case '4-4-2':
-        newLineup = [
-          { position: 'GOL', player: null, x: 50, y: 90 },
-          { position: 'ZAG', player: null, x: 30, y: 70 },
-          { position: 'ZAG', player: null, x: 70, y: 70 },
-          { position: 'LAD', player: null, x: 10, y: 70 },
-          { position: 'LAE', player: null, x: 90, y: 70 },
-          { position: 'VOL', player: null, x: 30, y: 50 },
-          { position: 'VOL', player: null, x: 70, y: 50 },
-          { position: 'MEI', player: null, x: 30, y: 30 },
-          { position: 'MEI', player: null, x: 70, y: 30 },
-          { position: 'ATA', player: null, x: 30, y: 10 },
-          { position: 'ATA', player: null, x: 70, y: 10 }
-        ];
-        break;
-      case '3-5-2':
-        newLineup = [
-          { position: 'GOL', player: null, x: 50, y: 90 },
-          { position: 'ZAG', player: null, x: 30, y: 70 },
-          { position: 'ZAG', player: null, x: 50, y: 70 },
-          { position: 'ZAG', player: null, x: 70, y: 70 },
-          { position: 'LAD', player: null, x: 10, y: 50 },
-          { position: 'LAE', player: null, x: 90, y: 50 },
-          { position: 'VOL', player: null, x: 50, y: 50 },
-          { position: 'MEI', player: null, x: 30, y: 30 },
-          { position: 'MEI', player: null, x: 70, y: 30 },
-          { position: 'ATA', player: null, x: 30, y: 10 },
-          { position: 'ATA', player: null, x: 70, y: 10 }
-        ];
-        break;
-      case '3-4-3':
-        newLineup = [
-          { position: 'GOL', player: null, x: 50, y: 90 },
-          { position: 'ZAG', player: null, x: 30, y: 70 },
-          { position: 'ZAG', player: null, x: 50, y: 70 },
-          { position: 'ZAG', player: null, x: 70, y: 70 },
-          { position: 'LAD', player: null, x: 20, y: 50 },
-          { position: 'LAE', player: null, x: 80, y: 50 },
-          { position: 'VOL', player: null, x: 40, y: 50 },
-          { position: 'VOL', player: null, x: 60, y: 50 },
-          { position: 'ATA', player: null, x: 20, y: 20 },
-          { position: 'ATA', player: null, x: 50, y: 10 },
-          { position: 'ATA', player: null, x: 80, y: 20 }
-        ];
-        break;
-      case '4-2-3-1':
-        newLineup = [
-          { position: 'GOL', player: null, x: 50, y: 90 },
-          { position: 'ZAG', player: null, x: 30, y: 70 },
-          { position: 'ZAG', player: null, x: 70, y: 70 },
-          { position: 'LAD', player: null, x: 10, y: 70 },
-          { position: 'LAE', player: null, x: 90, y: 70 },
-          { position: 'VOL', player: null, x: 30, y: 50 },
-          { position: 'VOL', player: null, x: 70, y: 50 },
-          { position: 'MEI', player: null, x: 30, y: 30 },
-          { position: 'MEI', player: null, x: 70, y: 30 },
-          { position: 'MEI', player: null, x: 50, y: 20 },
-          { position: 'ATA', player: null, x: 50, y: 10 }
-        ];
-        break;
-    }
+  useEffect(() => {
+    const newLineup = createLineupSlotsForFormation(formation);
     setLineup(newLineup);
   }, [formation]);
 
@@ -226,66 +152,82 @@ const LineupBuilder = () => {
     });
   };
 
+  const handlePredictionSubmit = (userName: string, lineup: LineupSlot[]) => {
+    // In the future, this would save to a database
+    console.log('Prediction submitted:', { userName, lineup });
+    
+    // Show leaderboard after submission
+    setShowLeaderboard(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="container mx-auto py-6 px-4">
         <h1 className="text-3xl font-bold text-figueira-black mb-6">Escalação da Galera</h1>
-        <p className="text-gray-600 mb-8">
-          Monte sua escalação ideal para o Figueirense! Escolha o esquema tático e arraste os jogadores para as posições desejadas.
+        <p className="text-gray-600 mb-6">
+          Monte a escalação do Figueirense que você acha que o técnico vai usar no próximo jogo! 
+          Escolha o esquema tático, posicione os jogadores e envie seu palpite.
         </p>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left column - Formation selection and controls */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle>Esquema Tático</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FormationSelector 
-                  currentFormation={formation} 
-                  onFormationChange={setFormation} 
-                />
-                
-                <div className="flex flex-col space-y-3 mt-6">
-                  <div className="p-3 bg-amber-50 border border-amber-200 rounded-md flex items-center text-sm text-amber-700 mb-4">
-                    <MoveHorizontal className="h-4 w-4 mr-2 flex-shrink-0" />
-                    <span>Arraste os jogadores para mudar suas posições no campo!</span>
+          <div className="lg:col-span-3">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Esquema Tático</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <FormationSelector 
+                    currentFormation={formation} 
+                    onFormationChange={(newFormation) => setFormation(newFormation)} 
+                  />
+                  
+                  <div className="flex flex-col space-y-3 mt-6">
+                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-md flex items-center text-sm text-amber-700 mb-4">
+                      <MoveHorizontal className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <span>Arraste os jogadores para mudar suas posições no campo!</span>
+                    </div>
+                  
+                    <Button 
+                      variant="outline" 
+                      className="w-full" 
+                      onClick={handleResetLineup}
+                    >
+                      <RotateCcw className="mr-2 h-4 w-4" />
+                      Reiniciar Escalação
+                    </Button>
+                    
+                    <Button 
+                      className="w-full bg-figueira-black hover:bg-figueira-black/90" 
+                      onClick={handleSaveLineup}
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      Salvar Escalação
+                    </Button>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="w-full" 
+                      onClick={handleShareLineup}
+                    >
+                      <Share2 className="mr-2 h-4 w-4" />
+                      Compartilhar
+                    </Button>
                   </div>
-                
-                  <Button 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={handleResetLineup}
-                  >
-                    <RotateCcw className="mr-2 h-4 w-4" />
-                    Reiniciar Escalação
-                  </Button>
-                  
-                  <Button 
-                    className="w-full bg-figueira-black hover:bg-figueira-black/90" 
-                    onClick={handleSaveLineup}
-                  >
-                    <Save className="mr-2 h-4 w-4" />
-                    Salvar Escalação
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={handleShareLineup}
-                  >
-                    <Share2 className="mr-2 h-4 w-4" />
-                    Compartilhar
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+              
+              <PredictionSubmission 
+                lineup={lineup}
+                onSubmit={handlePredictionSubmit}
+              />
+            </div>
           </div>
           
           {/* Middle column - Field visualization */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-5">
             <Card className="h-full">
               <CardHeader>
                 <CardTitle>Campo</CardTitle>
@@ -376,13 +318,35 @@ const LineupBuilder = () => {
             </Card>
           </div>
           
-          {/* Right column - Player selection */}
-          <div className="lg:col-span-1">
-            <PlayerSelection 
-              players={playerOptions} 
-              lineup={lineup}
-              onSelectPlayer={handlePlayerAssignment}
-            />
+          {/* Right column - Player selection or Leaderboard */}
+          <div className="lg:col-span-4">
+            {showLeaderboard ? (
+              <div className="space-y-4">
+                <Leaderboard />
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => setShowLeaderboard(false)}
+                >
+                  Voltar para Seleção de Jogadores
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <PlayerSelection 
+                  players={playerOptions} 
+                  lineup={lineup}
+                  onSelectPlayer={handlePlayerAssignment}
+                />
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => setShowLeaderboard(true)}
+                >
+                  Ver Ranking
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </main>
