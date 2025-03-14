@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Youtube, Users, Trophy, Calendar, Star, Link2 } from "lucide-react";
-import Simulator from './Simulator';
 import { useToast } from "@/components/ui/use-toast";
 import YouTubeLatestVideos from './YouTubeLatestVideos';
 
@@ -92,9 +91,6 @@ const MainPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Insert Simulator (separated from MainPage) */}
-      <Simulator />
 
       {/* About Section with Improved Design */}
       <div className="mb-12">

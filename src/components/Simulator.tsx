@@ -1,6 +1,8 @@
 
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 const Simulator = () => {
   return (
@@ -13,6 +15,11 @@ const Simulator = () => {
               Use nosso simulador exclusivo para prever resultados, criar cenários e acompanhar 
               a trajetória do Figueirense rumo ao acesso para a Série B do Brasileirão.
             </p>
+            <Link to="/matches">
+              <Button className="bg-red-600 hover:bg-red-700 text-white border-none">
+                Acessar Simulador <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
           <div className="relative h-48 md:h-64">
             <img 

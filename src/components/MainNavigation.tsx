@@ -31,7 +31,7 @@ const MainNavigation = () => {
               <Link to="/">
                 <NavigationMenuLink className={cn(
                   navigationMenuTriggerStyle(),
-                  isActive('/') && "bg-figueira-accent text-white"
+                  isActive('/') && "bg-figueira-black text-white"
                 )}>
                   <Home className="mr-2 h-4 w-4" />
                   Início
@@ -42,7 +42,7 @@ const MainNavigation = () => {
               <Link to="/matches">
                 <NavigationMenuLink className={cn(
                   navigationMenuTriggerStyle(),
-                  isActive('/matches') && "bg-figueira-accent text-white"
+                  isActive('/matches') && "bg-figueira-black text-white"
                 )}>
                   <Activity className="mr-2 h-4 w-4" />
                   Simulador
@@ -71,7 +71,7 @@ const MainNavigation = () => {
                   to="/" 
                   className={cn(
                     "flex items-center p-2 rounded-lg",
-                    isActive('/') ? "bg-figueira-accent text-white" : "hover:bg-gray-100"
+                    isActive('/') ? "bg-figueira-black text-white" : "hover:bg-gray-100"
                   )}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -84,7 +84,7 @@ const MainNavigation = () => {
                   to="/matches" 
                   className={cn(
                     "flex items-center p-2 rounded-lg",
-                    isActive('/matches') ? "bg-figueira-accent text-white" : "hover:bg-gray-100"
+                    isActive('/matches') ? "bg-figueira-black text-white" : "hover:bg-gray-100"
                   )}
                   onClick={() => setIsMenuOpen(false)}
                 >
