@@ -9,7 +9,7 @@ import { Save, RotateCcw, Share2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 // Temporary player data until we have a database
-const playerOptions = [
+const playerOptions: Player[] = [
   { id: 1, name: "João Ricardo", position: "GOL", number: 1 },
   { id: 2, name: "Diogo Mateus", position: "LAD", number: 2 },
   { id: 3, name: "Genílson", position: "ZAG", number: 3 },
