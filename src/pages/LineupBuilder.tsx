@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import FormationSelector from "@/components/FormationSelector";
 import PlayerSelection from "@/components/PlayerSelection";
 import { Button } from "@/components/ui/button";
-import { Save, RotateCcw, Share2 } from "lucide-react";
+import { Save, RotateCcw, Share2, MoveHorizontal } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 // Temporary player data until we have a database
@@ -50,6 +50,7 @@ const LineupBuilder = () => {
   const { toast } = useToast();
   const [formation, setFormation] = useState<Formation>('4-3-3');
   const [lineup, setLineup] = useState<LineupSlot[]>([]);
+  const [dragOverSlotIndex, setDragOverSlotIndex] = useState<number | null>(null);
 
   // Initialize lineup based on formation
   React.useEffect(() => {
@@ -153,6 +154,53 @@ const LineupBuilder = () => {
     setLineup(newLineup);
   };
 
+  const handleDragStart = (e: React.DragEvent, slotIndex: number) => {
+    if (!lineup[slotIndex].player) return;
+    
+    e.dataTransfer.setData('slotIndex', slotIndex.toString());
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, slotIndex: number) => {
+    e.preventDefault();
+    setDragOverSlotIndex(slotIndex);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverSlotIndex(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetSlotIndex: number) => {
+    e.preventDefault();
+    setDragOverSlotIndex(null);
+    
+    // Handle player dropped from player list
+    const playerData = e.dataTransfer.getData('player');
+    if (playerData) {
+      try {
+        const player = JSON.parse(playerData) as Player;
+        handlePlayerAssignment(targetSlotIndex, player);
+        return;
+      } catch (err) {
+        console.error('Failed to parse player data:', err);
+      }
+    }
+    
+    // Handle player dropped from another slot
+    const sourceSlotIndex = e.dataTransfer.getData('slotIndex');
+    if (sourceSlotIndex) {
+      const sourceIndex = parseInt(sourceSlotIndex, 10);
+      const newLineup = [...lineup];
+      
+      // Swap players between slots
+      const temp = newLineup[sourceIndex].player;
+      newLineup[sourceIndex].player = newLineup[targetSlotIndex].player;
+      newLineup[targetSlotIndex].player = temp;
+      
+      setLineup(newLineup);
+    }
+  };
+
   const handleResetLineup = () => {
     const resetLineup = lineup.map(slot => ({...slot, player: null}));
     setLineup(resetLineup);
@@ -201,6 +249,11 @@ const LineupBuilder = () => {
                 />
                 
                 <div className="flex flex-col space-y-3 mt-6">
+                  <div className="p-3 bg-amber-50 border border-amber-200 rounded-md flex items-center text-sm text-amber-700 mb-4">
+                    <MoveHorizontal className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <span>Arraste os jogadores para mudar suas posições no campo!</span>
+                  </div>
+                
                   <Button 
                     variant="outline" 
                     className="w-full" 
@@ -238,32 +291,67 @@ const LineupBuilder = () => {
                 <CardTitle>Campo</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="relative bg-green-600 w-full h-[500px] rounded-lg overflow-hidden border-4 border-white">
+                <div className="relative bg-gradient-to-b from-green-500 to-green-600 w-full h-[500px] rounded-lg overflow-hidden border-4 border-white shadow-md">
                   {/* Field markings */}
-                  <div className="absolute w-full h-full border-2 border-white/50"></div>
-                  <div className="absolute top-[28%] left-0 right-0 h-[44%] border-2 border-white/50"></div>
-                  <div className="absolute w-[20%] h-[10%] top-0 left-[40%] border-b-2 border-white/50"></div>
-                  <div className="absolute w-[20%] h-[10%] bottom-0 left-[40%] border-t-2 border-white/50"></div>
-                  <div className="absolute w-[60%] h-[30%] left-[20%] bottom-0 border-2 border-white/50"></div>
-                  <div className="absolute w-[40%] h-[15%] left-[30%] bottom-0 border-2 border-white/50"></div>
-                  <div className="absolute w-[60%] h-[30%] left-[20%] top-0 border-2 border-white/50"></div>
-                  <div className="absolute w-[40%] h-[15%] left-[30%] top-0 border-2 border-white/50"></div>
-                  <div className="absolute rounded-full w-4 h-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/50"></div>
+                  <div className="absolute w-full h-full border-2 border-white/70"></div>
                   
+                  {/* Center circle */}
+                  <div className="absolute rounded-full w-[20%] h-[20%] border-2 border-white/70 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                  <div className="absolute rounded-full w-4 h-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/70"></div>
+                  
+                  {/* Center line */}
+                  <div className="absolute top-0 bottom-0 left-1/2 w-0 border-l-2 border-white/70"></div>
+                  
+                  {/* Penalty areas */}
+                  <div className="absolute w-[60%] h-[25%] left-[20%] bottom-0 border-2 border-white/70"></div>
+                  <div className="absolute w-[20%] h-[10%] left-[40%] bottom-0 border-2 border-white/70"></div>
+                  <div className="absolute w-[60%] h-[25%] left-[20%] top-0 border-2 border-white/70"></div>
+                  <div className="absolute w-[20%] h-[10%] left-[40%] top-0 border-2 border-white/70"></div>
+                  
+                  {/* Goal areas */}
+                  <div className="absolute w-[40%] h-[10%] left-[30%] bottom-0 border-2 border-white/70"></div>
+                  <div className="absolute w-[40%] h-[10%] left-[30%] top-0 border-2 border-white/70"></div>
+                  
+                  {/* Corner arcs */}
+                  <div className="absolute w-6 h-6 top-0 left-0 border-r-2 border-white/70 rounded-br-full"></div>
+                  <div className="absolute w-6 h-6 top-0 right-0 border-l-2 border-white/70 rounded-bl-full"></div>
+                  <div className="absolute w-6 h-6 bottom-0 left-0 border-r-2 border-white/70 rounded-tr-full"></div>
+                  <div className="absolute w-6 h-6 bottom-0 right-0 border-l-2 border-white/70 rounded-tl-full"></div>
+                  
+                  {/* Grass pattern */}
+                  <div className="absolute inset-0 opacity-10">
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div 
+                        key={i} 
+                        className="absolute w-full border-t border-white/20"
+                        style={{ top: `${i * 10}%` }}
+                      ></div>
+                    ))}
+                  </div>
+
                   {/* Player positions */}
                   {lineup.map((slot, index) => (
                     <div 
                       key={index}
-                      className="absolute flex flex-col items-center -ml-10 -mt-10 w-20 h-20"
+                      className={`absolute flex flex-col items-center -ml-10 -mt-10 w-20 h-20 transition-all ${
+                        dragOverSlotIndex === index ? 'scale-110' : ''
+                      }`}
                       style={{ 
                         left: `${slot.x}%`, 
                         top: `${slot.y}%` 
                       }}
+                      draggable={!!slot.player}
+                      onDragStart={(e) => handleDragStart(e, index)}
+                      onDragOver={(e) => handleDragOver(e, index)}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, index)}
                     >
                       <div 
-                        className={`flex items-center justify-center w-12 h-12 rounded-full ${
-                          slot.player ? 'bg-figueira-black text-white' : 'bg-gray-300 text-gray-600'
-                        } border-2 border-white shadow-md cursor-pointer transition-transform hover:scale-110`}
+                        className={`flex items-center justify-center w-14 h-14 rounded-full ${
+                          slot.player 
+                            ? 'bg-figueira-black text-white cursor-grab shadow-lg active:cursor-grabbing hover:scale-105 transition-all duration-150' 
+                            : 'bg-white/60 backdrop-blur-sm text-black/70 border-2 border-dashed border-black/30 cursor-pointer hover:bg-white/80 transition-colors'
+                        } shadow-md`}
                         onClick={() => {
                           if (slot.player) {
                             handlePlayerAssignment(index, null);
@@ -271,13 +359,13 @@ const LineupBuilder = () => {
                         }}
                       >
                         {slot.player ? (
-                          <span className="font-bold">{slot.player.number}</span>
+                          <span className="font-bold text-lg">{slot.player.number}</span>
                         ) : (
-                          <span>{slot.position}</span>
+                          <span className="text-xs font-medium">{slot.position}</span>
                         )}
                       </div>
                       {slot.player && (
-                        <div className="mt-1 bg-black/70 text-white text-xs px-2 py-0.5 rounded truncate max-w-full">
+                        <div className="mt-1 bg-black/80 text-white text-xs px-2 py-0.5 rounded-md truncate max-w-full shadow">
                           {slot.player.name}
                         </div>
                       )}

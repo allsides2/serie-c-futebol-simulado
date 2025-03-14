@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Player, Position, LineupSlot } from '@/pages/LineupBuilder';
 import { Badge } from "@/components/ui/badge";
+import { groupPlayersByPosition, getPositionName } from '@/utils/playerUtils';
 
 interface PlayerSelectionProps {
   players: Player[];
@@ -26,19 +27,6 @@ const PlayerSelection: React.FC<PlayerSelectionProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [positionFilter, setPositionFilter] = useState<string>('all');
-  
-  const getPositionName = (position: Position): string => {
-    switch (position) {
-      case 'GOL': return 'Goleiro';
-      case 'ZAG': return 'Zagueiro';
-      case 'LAD': return 'Lateral Direito';
-      case 'LAE': return 'Lateral Esquerdo';
-      case 'VOL': return 'Volante';
-      case 'MEI': return 'Meia';
-      case 'ATA': return 'Atacante';
-      default: return position;
-    }
-  };
   
   const filteredPlayers = players.filter(player => {
     const matchesSearch = player.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,6 +71,77 @@ const PlayerSelection: React.FC<PlayerSelectionProps> = ({
       onSelectPlayer(anyOpenSlotIndex, player);
     }
   };
+
+  // Group players by position when showing all positions
+  const groupedPlayers = groupPlayersByPosition(filteredPlayers);
+  const renderPlayerList = () => {
+    if (filteredPlayers.length === 0) {
+      return (
+        <div className="text-center py-8 text-gray-500">
+          Nenhum jogador encontrado
+        </div>
+      );
+    }
+
+    if (positionFilter !== 'all') {
+      // Show filtered list without grouping
+      return (
+        <ul className="space-y-2">
+          {filteredPlayers.map(player => renderPlayerItem(player))}
+        </ul>
+      );
+    } else {
+      // Show grouped list by position
+      return (
+        <div className="space-y-4">
+          {Object.entries(groupedPlayers).map(([position, positionPlayers]) => 
+            positionPlayers.length > 0 && (
+              <div key={position} className="space-y-2">
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  {getPositionName(position as Position)}
+                </h3>
+                <ul className="space-y-2">
+                  {positionPlayers.map(player => renderPlayerItem(player))}
+                </ul>
+              </div>
+            )
+          )}
+        </div>
+      );
+    }
+  };
+
+  const renderPlayerItem = (player: Player) => (
+    <li
+      key={player.id}
+      className={`flex items-center justify-between p-3 rounded-md border cursor-pointer transition-all ${
+        isPlayerSelected(player.id)
+          ? 'border-figueira-black bg-figueira-black/5'
+          : 'border-gray-200 hover:border-gray-300'
+      }`}
+      onClick={() => handleSelectPlayer(player)}
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData('player', JSON.stringify(player));
+      }}
+    >
+      <div className="flex items-center">
+        <div className="bg-figueira-black text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">
+          {player.number}
+        </div>
+        <div>
+          <div className="font-medium">{player.name}</div>
+          <div className="text-xs text-gray-500">{getPositionName(player.position)}</div>
+        </div>
+      </div>
+      
+      {isPlayerSelected(player.id) && (
+        <Badge variant="outline" className="ml-2 bg-figueira-black text-white">
+          Selecionado
+        </Badge>
+      )}
+    </li>
+  );
   
   return (
     <Card className="h-full">
@@ -124,41 +183,7 @@ const PlayerSelection: React.FC<PlayerSelectionProps> = ({
           </Select>
           
           <div className="mt-4 max-h-[400px] overflow-y-auto pr-2">
-            {filteredPlayers.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                Nenhum jogador encontrado
-              </div>
-            ) : (
-              <ul className="space-y-2">
-                {filteredPlayers.map(player => (
-                  <li
-                    key={player.id}
-                    className={`flex items-center justify-between p-3 rounded-md border cursor-pointer transition-all ${
-                      isPlayerSelected(player.id)
-                        ? 'border-figueira-black bg-figueira-black/5'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => handleSelectPlayer(player)}
-                  >
-                    <div className="flex items-center">
-                      <div className="bg-figueira-black text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3">
-                        {player.number}
-                      </div>
-                      <div>
-                        <div className="font-medium">{player.name}</div>
-                        <div className="text-xs text-gray-500">{getPositionName(player.position)}</div>
-                      </div>
-                    </div>
-                    
-                    {isPlayerSelected(player.id) && (
-                      <Badge variant="outline" className="ml-2 bg-figueira-black text-white">
-                        Selecionado
-                      </Badge>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {renderPlayerList()}
           </div>
         </div>
       </CardContent>
